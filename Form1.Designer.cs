@@ -66,6 +66,7 @@
             // ChatsPan
             // 
             ChatsPan.AutoScrollMargin = new Size(0, 1);
+            ChatsPan.BackColor = Color.Gainsboro;
             ChatsPan.Dock = DockStyle.Fill;
             ChatsPan.Location = new Point(99, 0);
             ChatsPan.Name = "ChatsPan";
@@ -84,6 +85,7 @@
             // 
             // SettingsPan
             // 
+            SettingsPan.BackColor = Color.Silver;
             SettingsPan.Dock = DockStyle.Left;
             SettingsPan.Location = new Point(0, 0);
             SettingsPan.Name = "SettingsPan";
@@ -92,13 +94,14 @@
             // 
             // FrendAddbutton
             // 
+            FrendAddbutton.BackColor = Color.DarkGray;
             FrendAddbutton.Dock = DockStyle.Bottom;
             FrendAddbutton.Location = new Point(0, 406);
             FrendAddbutton.Name = "FrendAddbutton";
             FrendAddbutton.Size = new Size(308, 44);
             FrendAddbutton.TabIndex = 0;
-            FrendAddbutton.Text = "button1";
-            FrendAddbutton.UseVisualStyleBackColor = true;
+            FrendAddbutton.Text = "Найти друга";
+            FrendAddbutton.UseVisualStyleBackColor = false;
             FrendAddbutton.Click += FrendAddbutton_Click;
             // 
             // panel2
@@ -116,6 +119,7 @@
             // MessagesPan
             // 
             MessagesPan.AutoScrollMargin = new Size(0, 20);
+            MessagesPan.BackColor = Color.DimGray;
             MessagesPan.Dock = DockStyle.Fill;
             MessagesPan.Location = new Point(0, 51);
             MessagesPan.Name = "MessagesPan";
@@ -159,6 +163,7 @@
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(360, 44);
             textBox1.TabIndex = 0;
+            textBox1.KeyDown += textBox1_KeyDown;
             // 
             // panel4
             // 
@@ -171,13 +176,14 @@
             // 
             // AddMessbutton
             // 
+            AddMessbutton.BackColor = SystemColors.ActiveCaption;
             AddMessbutton.Dock = DockStyle.Fill;
             AddMessbutton.Location = new Point(0, 0);
             AddMessbutton.Name = "AddMessbutton";
             AddMessbutton.Size = new Size(132, 44);
             AddMessbutton.TabIndex = 0;
-            AddMessbutton.Text = "button2";
-            AddMessbutton.UseVisualStyleBackColor = true;
+            AddMessbutton.Text = "Отправить";
+            AddMessbutton.UseVisualStyleBackColor = false;
             AddMessbutton.Click += button2_Click;
             // 
             // ContextPan
@@ -198,6 +204,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ControlLight;
             ClientSize = new Size(800, 450);
             Controls.Add(panel2);
             Controls.Add(panel1);
