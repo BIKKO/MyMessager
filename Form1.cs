@@ -57,6 +57,7 @@ namespace MyMessager
             ToolStripMenuItem CreateChat = new ToolStripMenuItem("Создать чат");
             CreateChat.Click += CreateChat_Click;
             ToolStripMenuItem RemuveFrend = new ToolStripMenuItem("Удалить из друзей");
+            RemuveFrend.Click += DeleteFrend_Click;
             contextMenuFrend.Items.Add(CreateChat);
             contextMenuFrend.Items.Add(RemuveFrend);
 
@@ -251,7 +252,8 @@ namespace MyMessager
                 Text = "C" + start_fre,
                 AutoSize = true,
                 AutoEllipsis = true,
-                Dock = DockStyle.Fill,
+                Location = new Point(45/2 - 10, 45/2 - 10),
+                Font = new Font(DefaultFont.FontFamily, 20, FontStyle.Regular),
             };
             var ico = new LogoPan()
             {
@@ -351,6 +353,32 @@ namespace MyMessager
             }
         }
 
+        private void DeleteFrend_Click(object sender, EventArgs e)
+        {
+            var t = contextMenuFrend.SourceControl as Panel;
+            var pan = chats.Where(c => c.Item3.Text == t.Tag.ToString()).Select(s => s.Item2).First();
+
+            ChatsPan.Controls.Remove(pan);
+            chats.Remove(chats.Where(c => c.Item3.Text == t.Tag.ToString()).First());
+            FrendPan.Controls.Remove(t);
+            frends.Remove(t);
+            mes.Clear();
+            panel2.Visible = false;
+
+            buf_chat -= pan.Height;
+            buf_fre -= t.Height;
+
+            chats.ForEach(chat => 
+            {
+                chat.Item2.Location = new Point(0, chat.Item2.Location.Y - pan.Height);
+            });
+
+            frends.ForEach(frend =>
+            {
+                frend.Location = new Point(0, frend.Location.Y - t.Height);
+            });
+        }
+
         private void FrendAddbutton_Click(object sender, EventArgs e)
         {
             if (!log) return;
@@ -427,7 +455,7 @@ namespace MyMessager
 
             for (int i = 0; i < chats.Count; i++)
             {
-                if (chats[i].Item1.Equals(obj.Item1))
+                if (chats[i].Item2.Equals(obj.Item2))
                 {
                     chats[i] = obj;
                     break;

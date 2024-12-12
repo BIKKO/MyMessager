@@ -36,6 +36,7 @@
             FrendPan = new Panel();
             ScrollBarFrend = new VScrollBar();
             panel6 = new Panel();
+            label1 = new Label();
             FrendAddbutton = new Button();
             panel2 = new Panel();
             MessagesPan = new Panel();
@@ -52,6 +53,7 @@
             panel1.SuspendLayout();
             SettingsPan.SuspendLayout();
             FrendPan.SuspendLayout();
+            panel6.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel5.SuspendLayout();
@@ -122,11 +124,25 @@
             // 
             // panel6
             // 
+            panel6.BackColor = Color.DarkGray;
+            panel6.Controls.Add(label1);
             panel6.Dock = DockStyle.Top;
             panel6.Location = new Point(0, 0);
             panel6.Name = "panel6";
             panel6.Size = new Size(76, 71);
             panel6.TabIndex = 0;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.BackColor = Color.DarkGray;
+            label1.Font = new Font("Segoe UI", 20F);
+            label1.Location = new Point(1, 12);
+            label1.Name = "label1";
+            label1.Size = new Size(75, 46);
+            label1.TabIndex = 0;
+            label1.Text = "You";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // FrendAddbutton
             // 
@@ -252,7 +268,7 @@
             // 
             contextMenuFrend.ImageScalingSize = new Size(20, 20);
             contextMenuFrend.Name = "contextMenuFrend";
-            contextMenuFrend.Size = new Size(211, 32);
+            contextMenuFrend.Size = new Size(61, 4);
             // 
             // Form1
             // 
@@ -267,6 +283,8 @@
             panel1.ResumeLayout(false);
             SettingsPan.ResumeLayout(false);
             FrendPan.ResumeLayout(false);
+            panel6.ResumeLayout(false);
+            panel6.PerformLayout();
             panel2.ResumeLayout(false);
             panel3.ResumeLayout(false);
             panel5.ResumeLayout(false);
@@ -299,5 +317,6 @@
         private VScrollBar ScrollBarFrend;
         private Panel panel6;
         private ContextMenuStrip contextMenuFrend;
+        private Label label1;
     }
 }
