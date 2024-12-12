@@ -20,7 +20,7 @@ namespace MyMessager
         int butomPad;
         int start_mes;
         int const_start_mes;
-        int start_chats;
+        //int start_chats;
         int start_fre;
         int mes_max_size;
         SelectChat SC;
@@ -46,7 +46,7 @@ namespace MyMessager
             buf_mes = 0;
             start_mes = MessagesPan.Height;
             const_start_mes = start_mes;
-            start_chats = 0;
+            //start_chats = 0;
             mes_max_size = 40;
             buf_chat = 0;
             buf_fre = 0;
@@ -313,7 +313,7 @@ namespace MyMessager
                 AutoSize = true,
                 AutoEllipsis = true,
             };
-            start_chats++;
+            //start_chats++;
             var ico = new LogoPan()
             {
                 Width = 45,
@@ -487,6 +487,9 @@ namespace MyMessager
             MessagesPan.Controls.Clear();
             buf_mes = obj.Item5;
             start_mes = MessagesPan.Height;
+
+            ContentLable.Text = obj.Item3.Text;
+
             foreach (var item in obj.Item4)
             {
                 MessagesPan.Controls.Add(item.Item1);
