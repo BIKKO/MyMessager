@@ -20,12 +20,10 @@ namespace MyMessager
         int butomPad;
         int start_mes;
         int const_start_mes;
-        //int start_chats;
         int start_fre;
         int mes_max_size;
-        SelectChat SC;
         MessangerAPI.Core.MessangerAPI API;
-        Login l;
+        Login LoginForm;
         ((Guid, string), Panel, Label, List<(Panel, Label)>, int, int) obj;
 
         bool log;
@@ -46,7 +44,6 @@ namespace MyMessager
             buf_mes = 0;
             start_mes = MessagesPan.Height;
             const_start_mes = start_mes;
-            //start_chats = 0;
             mes_max_size = 40;
             buf_chat = 0;
             buf_fre = 0;
@@ -66,8 +63,8 @@ namespace MyMessager
             API = new MessangerAPI.Core.MessangerAPI("http://localhost:5000");
 
             SC = new SelectChat(MessagesPan.Height);
-            l = new Login(API);
-            l.Show();
+            LoginForm = new Login(API);
+            LoginForm.Show();
 #endif
         }
 
@@ -233,14 +230,14 @@ namespace MyMessager
             {
                 if (Application.OpenForms["Login"] == null)
                 {
-                    l = new Login(API);
-                    l.Show();
+                    LoginForm = new Login(API);
+                    LoginForm.Show();
                 }
                 return;
             }
             log = true;
             MessageRefresh.Enabled = false;
-            l.Close();
+            LoginForm.Close();
 #endif
         }
 
@@ -313,7 +310,6 @@ namespace MyMessager
                 AutoSize = true,
                 AutoEllipsis = true,
             };
-            //start_chats++;
             var ico = new LogoPan()
             {
                 Width = 45,
