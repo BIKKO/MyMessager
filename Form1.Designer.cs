@@ -43,12 +43,14 @@
             panel4 = new Panel();
             AddMessbutton = new Button();
             ContextPan = new Panel();
+            ContentLable = new Label();
             MessageRefresh = new System.Windows.Forms.Timer(components);
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel5.SuspendLayout();
             panel4.SuspendLayout();
+            ContextPan.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -189,11 +191,23 @@
             // ContextPan
             // 
             ContextPan.BackColor = SystemColors.ControlDark;
+            ContextPan.Controls.Add(ContentLable);
             ContextPan.Dock = DockStyle.Top;
             ContextPan.Location = new Point(0, 0);
             ContextPan.Name = "ContextPan";
             ContextPan.Size = new Size(492, 51);
             ContextPan.TabIndex = 2;
+            // 
+            // ContentLable
+            // 
+            ContentLable.AutoSize = true;
+            ContentLable.Dock = DockStyle.Left;
+            ContentLable.Font = new Font("Segoe UI", 14F);
+            ContentLable.Location = new Point(0, 0);
+            ContentLable.Name = "ContentLable";
+            ContentLable.Size = new Size(78, 32);
+            ContentLable.TabIndex = 0;
+            ContentLable.Text = "label1";
             // 
             // MessageRefresh
             // 
@@ -216,6 +230,8 @@
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
             panel4.ResumeLayout(false);
+            ContextPan.ResumeLayout(false);
+            ContextPan.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -236,5 +252,6 @@
         private System.Windows.Forms.Timer MessageRefresh;
         private Panel SettingsPan;
         private VScrollBar ScrollBarChat;
+        private Label ContentLable;
     }
 }

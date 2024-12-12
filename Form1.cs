@@ -11,22 +11,25 @@ namespace MyMessager
         int buf_mes;
         int buf_fre;
         List<(Panel, Label)> mes = new List<(Panel, Label)>();
-        List<(Panel, Label)> chats = new List<(Panel, Label)>();
+        List<(Panel, Label, List<(Panel, Label)>, int, int)> chats = new List<(Panel, Label, List<(Panel, Label)>, int, int)>();
         int MessPanWidth;
         int MessPanHeight;
         int butomPad;
         int start_mes;
+        int const_start_mes;
         int start_fre;
         int mes_max_size;
         SelectChat SC;
         MessangerAPI.Core.MessangerAPI API;
         Login l;
+        (Panel, Label, List<(Panel, Label)>, int, int) obj;
 
         bool log;
 
         public Form1()
         {
             InitializeComponent();
+
             MessPanWidth = MessagesPan.Width;
             MessPanHeight = MessagesPan.Height;
             ScrollBarMess.Visible = false;
@@ -37,16 +40,20 @@ namespace MyMessager
             butomPad = 15;
             buf_mes = 0;
             start_mes = MessagesPan.Height;
+            const_start_mes = start_mes;
             start_fre = 0;
             mes_max_size = 40;
             buf_fre = 0;
+            log = true;
+            panel2.Visible = false;
+#if !DEBUG
             log = false;
-
             API = new MessangerAPI.Core.MessangerAPI("http://localhost:5000");
 
             SC = new SelectChat(MessagesPan.Height);
             l = new Login(API);
             l.Show();
+#endif
         }
 
         private void UpdateScrollBar()
@@ -122,11 +129,11 @@ namespace MyMessager
             u1.Height *= message.Split("\n").Length;
             var d = new Label()
             {
-                Text = new string('\n', message.Split("\n").Length-2) + DateTime.Now.ToShortTimeString(),
+                Text = new string('\n', message.Split("\n").Length - 2) + DateTime.Now.ToShortTimeString(),
                 AutoEllipsis = true,
                 AutoSize = true,
                 BackColor = position == MessPosition.Right ? Color.LightGray : Color.LightSlateGray,
-                Dock = (DockStyle)(position == MessPosition.Right ? MessPosition.Right:MessPosition.Left),
+                Dock = (DockStyle)(position == MessPosition.Right ? MessPosition.Right : MessPosition.Left),
             };
             d.Height *= message.Split("\n").Length - 1;
             d.Location = new Point(mess_width, 0);
@@ -160,7 +167,7 @@ namespace MyMessager
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(!log) return;
+            if (!log) return;
             if (f)
             {
                 try
@@ -201,11 +208,12 @@ namespace MyMessager
                     me.Item1.Location.Y + delta
                     );
             });
-            start_mes += delta;
+            start_mes += delta;;
         }
 
         private void MessageRefreh_Tick(object sender, EventArgs e)
         {
+#if !DEBUG
             if (!API.GetIsLogin())
             {
                 if (Application.OpenForms["Login"] == null)
@@ -218,6 +226,7 @@ namespace MyMessager
             log = true;
             MessageRefresh.Enabled = false;
             l.Close();
+#endif
         }
 
         private void FrendAddbutton_Click(object sender, EventArgs e)
@@ -225,12 +234,13 @@ namespace MyMessager
             if (!log) return;
             var u1 = new Label()
             {
-                Dock = DockStyle.Fill,
-                Text = "Привет" + start_fre,
-                Padding = new Padding(45, 0, 0, 0)
+                Text = "Chat" + start_fre,
+                Padding = new Padding(45, 0, 0, 0),
+                AutoSize = true,
+                AutoEllipsis = true,
             };
             start_fre++;
-            var ico = new Panel()
+            var ico = new LogoPan()
             {
                 Width = 45,
                 Dock = DockStyle.Left,
@@ -241,34 +251,31 @@ namespace MyMessager
             {
                 Height = 45,
                 Width = ChatsPan.Width,
-                BackColor = Color.Red,
+                BackColor = Color.SlateGray,
                 BorderStyle = BorderStyle.FixedSingle,
             };
+
             testpan.Controls.Add(ico);
             testpan.Controls.Add(u1);
             testpan.Location = new Point(0, buf_fre - ScrollBarChat.Value);
+
+            testpan.Click += SelectChat_Click;
+            ico.Click += SelectChat_Click;
+            u1.Click += SelectChat_Click;
+
             ChatsPan.Controls.Add(testpan);
 
             buf_fre += testpan.Height;
-            chats.Add((testpan, u1));
+            chats.Add((testpan, u1, new(), 0,const_start_mes));
 
             if (buf_fre > ChatsPan.Height)
             {
                 ScrollBarChat.Maximum = buf_fre - ChatsPan.Height;
-                //ScrollBarChat.Value = 0;
                 if (!ScrollBarChat.Visible)
                 {
                     ScrollBarChat.Visible = true;
-                    //SkrollWidth = ScrollBarChat.Width;
-                    //chats.ForEach(me => { me.Item1.Width -= ScrollBarChat.Width; });
                 }
             }
-
-            //f = !f;
-
-            //if (fre.Count > 0)
-            //    fre.ForEach(fr => { fr.Item1.Location = new Point(0, fr.Item1.Location.Y + testpan.Height); });
-            //fre.Add((testpan, u1));
         }
 
         private void ScrollBarChat_Scroll(object sender, ScrollEventArgs e)
@@ -310,11 +317,10 @@ namespace MyMessager
                         );
                 });
 
-            //UpdateScrollBar();
-
             MessPanWidth = MessagesPan.Width;
             MessPanHeight = MessagesPan.Height;
             start_mes = MessagesPan.Height;
+            const_start_mes = MessagesPan.Height;
         }
 
         private void AddMessbutton_KeyDown(object sender, KeyEventArgs e)
@@ -331,7 +337,55 @@ namespace MyMessager
                 textBox1.Lines = textBox1.Lines.Where(s => s != "\r" || s != "\n" || s != "\r\n").ToArray();
                 textBox1.Lines[textBox1.Lines.Length - 1] += Environment.NewLine;
             }
-                
+
+        }
+
+        private void SelectChat_Click(object sender, EventArgs e)
+        {
+            obj.Item3 = mes;
+            obj.Item4 = buf_mes;
+            obj.Item5 = start_mes;
+
+            for (int i = 0; i < chats.Count; i++)
+            {
+                if (chats[i].Item1.Equals(obj.Item1))
+                {
+                    chats[i] = obj;
+                    break;
+                }
+            }
+
+            if (sender.GetType().Equals(typeof(Panel)))
+            {
+                var s = sender as Panel;
+                obj = chats.Where(e => e.Item1.Equals(s)).First();
+            }
+            else if (sender.GetType().Equals(typeof(LogoPan)))
+            {
+                var s = sender as LogoPan;
+                obj = chats.Where(e => e.Item1.Contains(s)).First();
+            }
+            else
+            {
+                var s = sender as Label;
+                obj = chats.Where(e => e.Item2.Equals(s)).First();
+            }
+
+            if (obj.Equals(null)) return;
+            if(!panel2.Visible) panel2.Visible = true;
+
+            ContentLable.Text = obj.Item2.Text;
+
+            mes = obj.Item3;
+            MessagesPan.Controls.Clear();
+            buf_mes = obj.Item4;
+            start_mes = MessagesPan.Height;
+            foreach(var item in obj.Item3)
+            {
+                MessagesPan.Controls.Add(item.Item1);
+            }
+
+            UpdateScrollBar();
         }
     }
 }
