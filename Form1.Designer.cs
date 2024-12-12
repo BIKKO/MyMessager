@@ -33,6 +33,9 @@
             ChatsPan = new Panel();
             ScrollBarChat = new VScrollBar();
             SettingsPan = new Panel();
+            FrendPan = new Panel();
+            ScrollBarFrend = new VScrollBar();
+            panel6 = new Panel();
             FrendAddbutton = new Button();
             panel2 = new Panel();
             MessagesPan = new Panel();
@@ -45,7 +48,10 @@
             ContextPan = new Panel();
             ContentLable = new Label();
             MessageRefresh = new System.Windows.Forms.Timer(components);
+            contextMenuFrend = new ContextMenuStrip(components);
             panel1.SuspendLayout();
+            SettingsPan.SuspendLayout();
+            FrendPan.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel5.SuspendLayout();
@@ -70,9 +76,9 @@
             ChatsPan.AutoScrollMargin = new Size(0, 1);
             ChatsPan.BackColor = Color.Gainsboro;
             ChatsPan.Dock = DockStyle.Fill;
-            ChatsPan.Location = new Point(99, 0);
+            ChatsPan.Location = new Point(76, 0);
             ChatsPan.Name = "ChatsPan";
-            ChatsPan.Size = new Size(196, 406);
+            ChatsPan.Size = new Size(219, 406);
             ChatsPan.TabIndex = 1;
             // 
             // ScrollBarChat
@@ -88,11 +94,39 @@
             // SettingsPan
             // 
             SettingsPan.BackColor = Color.Silver;
+            SettingsPan.Controls.Add(FrendPan);
+            SettingsPan.Controls.Add(panel6);
             SettingsPan.Dock = DockStyle.Left;
             SettingsPan.Location = new Point(0, 0);
             SettingsPan.Name = "SettingsPan";
-            SettingsPan.Size = new Size(99, 406);
+            SettingsPan.Size = new Size(76, 406);
             SettingsPan.TabIndex = 2;
+            // 
+            // FrendPan
+            // 
+            FrendPan.Controls.Add(ScrollBarFrend);
+            FrendPan.Dock = DockStyle.Fill;
+            FrendPan.Location = new Point(0, 71);
+            FrendPan.Name = "FrendPan";
+            FrendPan.Size = new Size(76, 335);
+            FrendPan.TabIndex = 1;
+            // 
+            // ScrollBarFrend
+            // 
+            ScrollBarFrend.Dock = DockStyle.Right;
+            ScrollBarFrend.Location = new Point(59, 0);
+            ScrollBarFrend.Name = "ScrollBarFrend";
+            ScrollBarFrend.Size = new Size(17, 335);
+            ScrollBarFrend.TabIndex = 0;
+            ScrollBarFrend.Scroll += ScrollBarFrend_Scroll;
+            // 
+            // panel6
+            // 
+            panel6.Dock = DockStyle.Top;
+            panel6.Location = new Point(0, 0);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(76, 71);
+            panel6.TabIndex = 0;
             // 
             // FrendAddbutton
             // 
@@ -214,6 +248,12 @@
             MessageRefresh.Enabled = true;
             MessageRefresh.Tick += MessageRefreh_Tick;
             // 
+            // contextMenuFrend
+            // 
+            contextMenuFrend.ImageScalingSize = new Size(20, 20);
+            contextMenuFrend.Name = "contextMenuFrend";
+            contextMenuFrend.Size = new Size(211, 32);
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -225,6 +265,8 @@
             Name = "Form1";
             Text = "Messanger";
             panel1.ResumeLayout(false);
+            SettingsPan.ResumeLayout(false);
+            FrendPan.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel3.ResumeLayout(false);
             panel5.ResumeLayout(false);
@@ -253,5 +295,9 @@
         private Panel SettingsPan;
         private VScrollBar ScrollBarChat;
         private Label ContentLable;
+        private Panel FrendPan;
+        private VScrollBar ScrollBarFrend;
+        private Panel panel6;
+        private ContextMenuStrip contextMenuFrend;
     }
 }
