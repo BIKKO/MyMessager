@@ -1,12 +1,17 @@
 using MessangerAPI.Core;
 using MyMessager.Model;
+using System.Configuration;
+using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Security.Policy;
 
 namespace MyMessager
 {
     public partial class Form1 : Form
     {
+
         bool f = true;
         int buf_mes;
         int buf_chat;
@@ -28,7 +33,7 @@ namespace MyMessager
 
         bool log;
 
-        public Form1()
+        public Form1(bool debugStayt = false)
         {
             InitializeComponent();
 
@@ -60,12 +65,34 @@ namespace MyMessager
 
 #if !DEBUG
             log = false;
-            API = new MessangerAPI.Core.MessangerAPI("http://localhost:5000");
+            var appConfig = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
+            var uri = appConfig.AppSettings.Settings["uri"].Value;
+            API = new MessangerAPI.Core.MessangerAPI(uri);
 
-            SC = new SelectChat(MessagesPan.Height);
             LoginForm = new Login(API);
             LoginForm.Show();
+#elif DEBUG && de
+            var appConfig = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
+            var uri = appConfig.AppSettings.Settings["uri"].Value;
+            API = new MessangerAPI.Core.MessangerAPI(uri);
+            Task.Run(Login);
+            DebugStayt = debugStayt;
 #endif
+        }
+
+        private async void Login()
+        {
+            try
+            {
+                await API.Login("ts1", "123");
+                log = true;
+                MessageBox.Show("Вход под ts1 успешен");
+            }
+            catch
+            {
+                MessageBox.Show("Неудалось подключиться");
+                BeginInvoke(new System.Windows.Forms.MethodInvoker(Close));
+            }
         }
 
         private void UpdateScrollBar()
