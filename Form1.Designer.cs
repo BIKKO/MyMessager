@@ -50,6 +50,7 @@
             ContentLable = new Label();
             MessageRefresh = new System.Windows.Forms.Timer(components);
             contextMenuFrend = new ContextMenuStrip(components);
+            contextMenuMess = new ContextMenuStrip(components);
             panel1.SuspendLayout();
             SettingsPan.SuspendLayout();
             FrendPan.SuspendLayout();
@@ -270,6 +271,12 @@
             contextMenuFrend.Name = "contextMenuFrend";
             contextMenuFrend.Size = new Size(61, 4);
             // 
+            // contextMenuMess
+            // 
+            contextMenuMess.ImageScalingSize = new Size(20, 20);
+            contextMenuMess.Name = "contextMenuMess";
+            contextMenuMess.Size = new Size(211, 32);
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -318,5 +325,6 @@
         private Panel panel6;
         private ContextMenuStrip contextMenuFrend;
         private Label label1;
+        private ContextMenuStrip contextMenuMess;
     }
 }

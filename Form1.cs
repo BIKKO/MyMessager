@@ -31,6 +31,9 @@ namespace MyMessager
         Login LoginForm;
         ((Guid, string), Panel, Label, List<(Panel, Label)>, int, int) obj;
 
+        bool mess_update;
+        Label update_lable;
+
         bool log;
 
         public Form1(bool debugStayt = false)
@@ -55,6 +58,7 @@ namespace MyMessager
             start_fre = 0;
             log = true;
             panel2.Visible = false;
+            mess_update = false;
 
             ToolStripMenuItem CreateChat = new ToolStripMenuItem("Создать чат");
             CreateChat.Click += CreateChat_Click;
@@ -62,6 +66,10 @@ namespace MyMessager
             RemuveFrend.Click += DeleteFrend_Click;
             contextMenuFrend.Items.Add(CreateChat);
             contextMenuFrend.Items.Add(RemuveFrend);
+
+            ToolStripMenuItem UpdateMess = new ToolStripMenuItem("Обновить");
+            contextMenuMess.Items.Add(UpdateMess);
+            UpdateMess.Click += UpdateMess_Click;
 
 #if !DEBUG
             log = false;
@@ -129,36 +137,13 @@ namespace MyMessager
 
         private void CreateMes(string _mess, MessPosition position)
         {
-            if (string.IsNullOrEmpty(Regex.Replace(_mess, @"\t|\r|\n", ""))) throw new ArgumentNullException();
-            string message = string.Empty;
-            int mess_width = 0;
-            var mes_buf = _mess.Trim().Split('\n');
+            string message;
+            int mess_width;
+            FormanMess(_mess, out message, out mess_width);
 
-            foreach (var mes in mes_buf.Where(s => s != "\r" || s != "\n" || s != "\r\n"))
-            {
-                if (mes.Length >= mes_max_size)
-                {
-                    int last_i = 0;
-                    mess_width = mes_max_size;
-                    string buf = string.Empty;
-                    for (int i = 0; i + mes_max_size < mes.Length; i += mes_max_size)
-                    {
-                        buf += mes.Substring(i, mes_max_size);
-                        buf += "\n";
-                        last_i = i + mes_max_size;
-                    }
-                    buf += mes.Substring(last_i, mes.Length - last_i);
-                    message += buf;
-                }
-                else message += mes;
-                if (mess_width != mes_max_size)
-                {
-                    mess_width = Math.Max(mess_width, mes.Length);
-                }
-                message += "\n";
-            }
             var u1 = new Label()
             {
+                //MaximumSize = new Size(100, 0),
                 Dock = (DockStyle)position,
                 Text = message,
                 AutoEllipsis = true,
@@ -166,6 +151,7 @@ namespace MyMessager
                 BackColor = position == MessPosition.Right ? Color.LightGray : Color.LightSlateGray,
             };
             u1.Height *= message.Split("\n").Length;
+            u1.ContextMenuStrip = contextMenuMess;
             var d = new Label()
             {
                 Text = new string('\n', message.Split("\n").Length - 2) + DateTime.Now.ToShortTimeString(),
@@ -173,6 +159,7 @@ namespace MyMessager
                 AutoSize = true,
                 BackColor = position == MessPosition.Right ? Color.LightGray : Color.LightSlateGray,
                 Dock = (DockStyle)(position == MessPosition.Right ? MessPosition.Right : MessPosition.Left),
+                Tag = "date",
             };
             d.Height *= message.Split("\n").Length - 1;
             d.Location = new Point(mess_width, 0);
@@ -204,9 +191,74 @@ namespace MyMessager
             mes.Add((testpan, u1));
         }
 
+        private void FormanMess(string _mess, out string message, out int mess_width)
+        {
+            if (string.IsNullOrEmpty(Regex.Replace(_mess, @"\t|\r|\n", ""))) throw new ArgumentNullException();
+            message = string.Empty;
+            mess_width = 0;
+            var mes_buf = _mess.Trim().Split('\n');
+
+            foreach (var mes in mes_buf.Where(s => s != "\r" || s != "\n" || s != "\r\n"))
+            {
+                if (mes.Length >= mes_max_size)
+                {
+                    int last_i = 0;
+                    mess_width = mes_max_size;
+                    string buf = string.Empty;
+                    for (int i = 0; i + mes_max_size < mes.Length; i += mes_max_size)
+                    {
+                        buf += mes.Substring(i, mes_max_size);
+                        buf += "\n";
+                        last_i = i + mes_max_size;
+                    }
+                    buf += mes.Substring(last_i, mes.Length - last_i);
+                    message += buf;
+                }
+                else
+                    message += mes;
+                if (mess_width != mes_max_size)
+                {
+                    mess_width = Math.Max(mess_width, mes.Length);
+                }
+                message += "\n";
+            }
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             if (!log) return;
+
+            if (mess_update)
+            {
+                var mess = obj.Item4.Where(m => m.Item2.Equals(update_lable)).First();
+                string msg = string.Empty;
+                int mess_width;
+
+                FormanMess(textBox1.Text, out msg, out mess_width);
+
+                mess.Item2.Text = msg;
+                var c = mess.Item1.Controls;
+                foreach(Control c2 in c)
+                {
+                    var lab = c2 as Label;
+                    if (lab.Tag == "date")
+                    {
+                        lab.Location =  new Point(mess_width, lab.Location.Y);
+                        lab.Height *= msg.Split("\n").Length - 1;
+                        var date = lab.Text.Replace("\n", "");
+                        lab.Text = new string('\n', msg.Split("\n").Length - 2) + date;
+                    }
+                }
+                int mess_pan_hig = mess.Item1.Height;
+                mess.Item1.Height = mess.Item2.Height;
+
+                mess.Item1.Location = new Point(0, mess.Item1.Location.Y - (mess.Item1.Height - mess_pan_hig));
+
+                textBox1.Text = string.Empty;
+                mess_update = false;
+                return;
+            }
+
             if (f)
             {
                 try
@@ -400,6 +452,15 @@ namespace MyMessager
             {
                 frend.Location = new Point(0, frend.Location.Y - t.Height);
             });
+        }
+
+        private void UpdateMess_Click(object sender, EventArgs e)
+        {
+            var upd_mes = contextMenuMess.SourceControl as Label;
+            if (upd_mes == null) return;
+            textBox1.Text = upd_mes.Text;
+            update_lable = upd_mes;
+            mess_update = true;
         }
 
         private void FrendAddbutton_Click(object sender, EventArgs e)
