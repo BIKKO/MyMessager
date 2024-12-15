@@ -470,6 +470,10 @@ namespace MyMessager
         {
             var upd_mes = contextMenuMess.SourceControl as Label;
             if (upd_mes == null) return;
+            if (upd_mes.Tag == "date")
+            {
+                upd_mes = mes.Where(m => m.Item1.Contains(upd_mes)).Select(m => m.Item2).First();
+            }
             textBox1.Text = upd_mes.Text;
             update_lable = upd_mes;
             mess_update = true;
