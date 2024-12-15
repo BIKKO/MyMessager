@@ -230,32 +230,7 @@ namespace MyMessager
 
             if (mess_update)
             {
-                var mess = obj.Item4.Where(m => m.Item2.Equals(update_lable)).First();
-                string msg = string.Empty;
-                int mess_width;
-
-                FormanMess(textBox1.Text, out msg, out mess_width);
-
-                mess.Item2.Text = msg;
-                var c = mess.Item1.Controls;
-                foreach(Control c2 in c)
-                {
-                    var lab = c2 as Label;
-                    if (lab.Tag == "date")
-                    {
-                        lab.Location =  new Point(mess_width, lab.Location.Y);
-                        lab.Height *= msg.Split("\n").Length - 1;
-                        var date = lab.Text.Replace("\n", "");
-                        lab.Text = new string('\n', msg.Split("\n").Length - 2) + date;
-                    }
-                }
-                int mess_pan_hig = mess.Item1.Height;
-                mess.Item1.Height = mess.Item2.Height;
-
-                mess.Item1.Location = new Point(0, mess.Item1.Location.Y - (mess.Item1.Height - mess_pan_hig));
-
-                textBox1.Text = string.Empty;
-                mess_update = false;
+                UpdateMessade();
                 return;
             }
 
@@ -286,6 +261,43 @@ namespace MyMessager
             textBox1.Lines = null;
 
             UpdateScrollBar();
+        }
+
+        private void UpdateMessade()
+        {
+            var mess = obj.Item4.Where(m => m.Item2.Equals(update_lable)).First();
+            string msg = string.Empty;
+            int mess_width;
+
+            FormanMess(textBox1.Text, out msg, out mess_width);
+
+            mess.Item2.Text = msg;
+            var c = mess.Item1.Controls;
+            foreach (Control c2 in c)
+            {
+                var lab = c2 as Label;
+                if (lab.Tag == "date")
+                {
+                    lab.Location = new Point(mess_width, lab.Location.Y);
+                    lab.Height *= msg.Split("\n").Length - 1;
+                    var date = lab.Text.Replace("\n", "");
+                    lab.Text = new string('\n', msg.Split("\n").Length - 2) + date;
+                }
+            }
+            int mess_pan_hig = mess.Item1.Height;
+            int Hig_delta = mess.Item2.Height - mess_pan_hig;
+            mess.Item1.Height = mess.Item2.Height;
+            buf_mes += Hig_delta;
+
+            mes.Where(m => m != mess).ToList().ForEach(m =>
+            {
+                m.Item1.Location = new Point(0,m.Item1.Location.Y - Hig_delta);
+            });
+
+            mess.Item1.Location = new Point(0, mess.Item1.Location.Y - (mess.Item1.Height - mess_pan_hig));
+
+            textBox1.Text = string.Empty;
+            mess_update = false;
         }
 
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
