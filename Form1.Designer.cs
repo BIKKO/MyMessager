@@ -51,6 +51,8 @@
             MessageRefresh = new System.Windows.Forms.Timer(components);
             contextMenuFrend = new ContextMenuStrip(components);
             contextMenuMess = new ContextMenuStrip(components);
+            UpdateFrendTimer = new System.Windows.Forms.Timer(components);
+            UpdateChatsTimer = new System.Windows.Forms.Timer(components);
             panel1.SuspendLayout();
             SettingsPan.SuspendLayout();
             FrendPan.SuspendLayout();
@@ -275,7 +277,18 @@
             // 
             contextMenuMess.ImageScalingSize = new Size(20, 20);
             contextMenuMess.Name = "contextMenuMess";
-            contextMenuMess.Size = new Size(211, 32);
+            contextMenuMess.Size = new Size(61, 4);
+            // 
+            // UpdateFrendTimer
+            // 
+            UpdateFrendTimer.Enabled = true;
+            UpdateFrendTimer.Interval = 1500;
+            UpdateFrendTimer.Tick += UpdateFrendTimer_Tick;
+            // 
+            // UpdateChatsTimer
+            // 
+            UpdateChatsTimer.Interval = 2000;
+            UpdateChatsTimer.Tick += UpdateChatsTimer_Tick;
             // 
             // Form1
             // 
@@ -287,6 +300,7 @@
             Controls.Add(panel1);
             Name = "Form1";
             Text = "Messanger";
+            FormClosing += Form1_FormClosing;
             panel1.ResumeLayout(false);
             SettingsPan.ResumeLayout(false);
             FrendPan.ResumeLayout(false);
@@ -326,5 +340,7 @@
         private ContextMenuStrip contextMenuFrend;
         private Label label1;
         private ContextMenuStrip contextMenuMess;
+        private System.Windows.Forms.Timer UpdateFrendTimer;
+        private System.Windows.Forms.Timer UpdateChatsTimer;
     }
 }

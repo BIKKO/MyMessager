@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Security.Policy;
+using MessangerAPI.Core.Model;
+using System.Xml.Linq;
 
 namespace MyMessager
 {
@@ -36,7 +38,7 @@ namespace MyMessager
 
         bool log;
 
-        public Form1(bool debugStayt = false)
+        public Form1(bool debugStayt = true)
         {
             InitializeComponent();
 
@@ -79,12 +81,11 @@ namespace MyMessager
 
             LoginForm = new Login(API);
             LoginForm.Show();
-#elif DEBUG && de
+#elif DEBUG
             var appConfig = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
             var uri = appConfig.AppSettings.Settings["uri"].Value;
             API = new MessangerAPI.Core.MessangerAPI(uri);
             Task.Run(Login);
-            DebugStayt = debugStayt;
 #endif
         }
 
@@ -93,8 +94,16 @@ namespace MyMessager
             try
             {
                 await API.Login("ts1", "123");
-                log = true;
                 MessageBox.Show("¬ход под ts1 успешен");
+                BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+                {
+                    label1.Text = API.GetName();
+                    UpdateFrendTimer.Enabled = true;
+                    log = true;
+                }));
+
+                await Task.Run(AddFrendStart);
+                await Task.Run(UpdateChatsStart);
             }
             catch
             {
@@ -291,7 +300,7 @@ namespace MyMessager
 
             mes.Where(m => m != mess).ToList().ForEach(m =>
             {
-                m.Item1.Location = new Point(0,m.Item1.Location.Y - Hig_delta);
+                m.Item1.Location = new Point(0, m.Item1.Location.Y - Hig_delta);
             });
 
             mess.Item1.Location = new Point(0, mess.Item1.Location.Y - (mess.Item1.Height - mess_pan_hig));
@@ -329,18 +338,21 @@ namespace MyMessager
             log = true;
             MessageRefresh.Enabled = false;
             LoginForm.Close();
+            label1.Text = API.GetName();
+            Task.Run(AddFrendStart);
+            Task.Run(UpdateChatsStart);
 #endif
         }
 
-        private void AddFrend()
+        private void AddFrend(Frend frend)
         {
             if (!log) return;
             var u1 = new Label()
             {
-                Text = "C" + start_fre,
+                Text = frend.name[0].ToString(),
                 AutoSize = true,
                 AutoEllipsis = true,
-                Location = new Point(45/2 - 10, 45/2 - 10),
+                Location = new Point(45 / 2 - 10, 45 / 2 - 10),
                 Font = new Font(DefaultFont.FontFamily, 20, FontStyle.Regular),
             };
             var ico = new LogoPan()
@@ -352,14 +364,14 @@ namespace MyMessager
             };
             var testpan = new Panel()
             {
+                Name = frend.name,
                 Height = FrendPan.Width,
                 Width = FrendPan.Width,
                 BackColor = Color.SlateGray,
                 BorderStyle = BorderStyle.FixedSingle,
-                Tag = "Chat"+start_fre,
+                Tag = frend.id,
             };
             start_fre++;
-
             testpan.Controls.Add(ico);
             ico.Controls.Add(u1);
             testpan.Location = new Point(0, buf_fre - ScrollBarFrend.Value);
@@ -370,12 +382,13 @@ namespace MyMessager
 
             buf_fre += testpan.Height;
 
-            frends.Add( testpan );
+            frends.Add(testpan);
 
             if (buf_fre > FrendPan.Height)
             {
                 ScrollBarFrend.Maximum = buf_fre - FrendPan.Height;
-                frends.ForEach(ch => {
+                frends.ForEach(ch =>
+                {
                     ch.Width = FrendPan.Width;
                     ch.Height = FrendPan.Width;
                 });
@@ -388,15 +401,14 @@ namespace MyMessager
 
         private void CreateChat_Click(object sender, EventArgs e)
         {
-            var frends_tag = frends.Select(f => f.Tag.ToString()).Where(t => !t.Equals(null)).ToList();
-            var chats_name = chats.Select(c => c.Item3.Text).ToList();
-            var name = frends_tag.Except(chats_name);
+            Task.Run(CreateChat);
+        }
 
-            if (!name.Any()) return;
-
+        private void CreateChat(Guid id_chat, string name_frend)
+        {
             var u1 = new Label()
             {
-                Text = name.ToList()[0],
+                Text = name_frend,
                 Padding = new Padding(45, 0, 0, 0),
                 AutoSize = true,
                 AutoEllipsis = true,
@@ -414,6 +426,7 @@ namespace MyMessager
                 Width = ChatsPan.Width,
                 BackColor = Color.SlateGray,
                 BorderStyle = BorderStyle.FixedSingle,
+                Tag = id_chat,
             };
 
             testpan.Controls.Add(ico);
@@ -440,6 +453,23 @@ namespace MyMessager
             }
         }
 
+        private async Task CreateChat()
+        {
+            var frends_tag = frends.Select(f => f.Name.ToString()).Where(t => !t.Equals(null)).ToList();
+            var chats_name = chats.Select(c => c.Item3.Text).ToList();
+            var name = frends_tag.Except(chats_name);
+
+            if (!name.Any()) return;
+
+            var id_chat = await API.CreateChat(Guid.Parse(frends.Where(f => f.Name == name.ToList()[0])
+                .Select(f => f.Tag.ToString()).First()));
+            BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+            {
+                CreateChat(id_chat, name.ToList()[0]);
+            }));
+            
+        }
+
         private void DeleteFrend_Click(object sender, EventArgs e)
         {
             var t = contextMenuFrend.SourceControl as Panel;
@@ -455,7 +485,7 @@ namespace MyMessager
             buf_chat -= pan.Height;
             buf_fre -= t.Height;
 
-            chats.ForEach(chat => 
+            chats.ForEach(chat =>
             {
                 chat.Item2.Location = new Point(0, chat.Item2.Location.Y - pan.Height);
             });
@@ -482,7 +512,9 @@ namespace MyMessager
         private void FrendAddbutton_Click(object sender, EventArgs e)
         {
             if (!log) return;
-            AddFrend();
+            //AddFrend();
+            AddFrendForm adf = new AddFrendForm(API);
+            adf.ShowDialog();
         }
 
         private void ScrollBarChat_Scroll(object sender, ScrollEventArgs e)
@@ -528,10 +560,6 @@ namespace MyMessager
             MessPanHeight = MessagesPan.Height;
             start_mes = MessagesPan.Height;
             const_start_mes = MessagesPan.Height;
-        }
-
-        private void AddMessbutton_KeyDown(object sender, KeyEventArgs e)
-        {
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -609,6 +637,78 @@ namespace MyMessager
                     ch.Location.Y + delta
                     );
             });
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            API.Logout();
+        }
+
+        private void UpdateFrendTimer_Tick(object sender, EventArgs e)
+        {
+            if (!log) return;
+            Task.Run(FrendUpd);
+        }
+
+        private async Task FrendUpd()
+        {
+            var frend_list = await API.GetFrends();
+            var frend_id = frend_list.Select(f => f.id.ToString()).ToList();
+            List<Frend> newFrend = [];
+            foreach (var f in frends)
+                if (!frend_id.Contains(f.Tag.ToString()))
+                {
+                    Frend nf = frend_list.Where(fr => fr.id.ToString().Equals(f.Tag.ToString())).First();
+                    AddFrend(nf);
+                }
+        }
+
+        private async Task AddFrendStart()
+        {
+            var frend_list = await API.GetFrends();
+            foreach (var nf in frend_list)
+                BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+                {
+                    AddFrend(nf);
+                }));
+            UpdateFrendTimer.Enabled = true;
+        }
+
+        private void UpdateChatsTimer_Tick(object sender, EventArgs e)
+        {
+            if (!log) return;
+            Task.Run(UpdateChats);
+        }
+
+        private async Task UpdateChatsStart()
+        {
+            var chats = await API.GetChats();
+            foreach (var ch in chats)
+            {
+                BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+                {
+                    CreateChat(ch.Id_Chat, ch.frend);
+                }));
+            }
+        }
+
+        private async Task UpdateChats()
+        {
+            var chats = await API.GetChats();
+            var chat_frend = chats.Select(f => f.frend).ToList();
+            var chat_ = this.chats.Select(f => f.Item3.Text).ToList();
+
+            foreach (var chat in chat_)
+            {
+                if (!chat_frend.Contains(chat))
+                {
+                    var ch = chats.Where(c => c.frend == chat).First();
+                    BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+                    {
+                        CreateChat(ch.Id_Chat, ch.frend);
+                    }));
+                }
+            }
         }
     }
 }
