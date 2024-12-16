@@ -281,7 +281,6 @@
             // 
             // UpdateFrendTimer
             // 
-            UpdateFrendTimer.Enabled = true;
             UpdateFrendTimer.Interval = 1500;
             UpdateFrendTimer.Tick += UpdateFrendTimer_Tick;
             // 

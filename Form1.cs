@@ -62,6 +62,9 @@ namespace MyMessager
             panel2.Visible = false;
             mess_update = false;
 
+            UpdateFrendTimer.Enabled = false;
+            UpdateFrendTimer.Enabled = false;
+
             ToolStripMenuItem CreateChat = new ToolStripMenuItem("—оздать чат");
             CreateChat.Click += CreateChat_Click;
             ToolStripMenuItem RemuveFrend = new ToolStripMenuItem("”далить из друзей");
@@ -95,15 +98,16 @@ namespace MyMessager
             {
                 await API.Login("ts1", "123");
                 MessageBox.Show("¬ход под ts1 успешен");
-                BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+                BeginInvoke(new System.Windows.Forms.MethodInvoker(async () =>
                 {
                     label1.Text = API.GetName();
+
+                    await Task.Run(AddFrendStart);
+                    await Task.Run(UpdateChatsStart);
                     UpdateFrendTimer.Enabled = true;
+                    UpdateChatsTimer.Enabled = true;
                     log = true;
                 }));
-
-                await Task.Run(AddFrendStart);
-                await Task.Run(UpdateChatsStart);
             }
             catch
             {
@@ -335,25 +339,34 @@ namespace MyMessager
                 }
                 return;
             }
-            log = true;
             MessageRefresh.Enabled = false;
             LoginForm.Close();
-            label1.Text = API.GetName();
-            Task.Run(AddFrendStart);
-            Task.Run(UpdateChatsStart);
+            BeginInvoke(new System.Windows.Forms.MethodInvoker(async () =>
+                {
+                    label1.Text = API.GetName();
+
+                    await Task.Run(AddFrendStart);
+                    await Task.Run(UpdateChatsStart);
+                    UpdateFrendTimer.Enabled = true;
+                    UpdateChatsTimer.Enabled = true;
+                    log = true;
+                }));
 #endif
         }
 
         private void AddFrend(Frend frend)
         {
             if (!log) return;
+            var pan_name = frends.Select(m => m.Name).ToList();
+            if (pan_name.Contains(frend.name)) return;
+
             var u1 = new Label()
             {
-                Text = frend.name[0].ToString(),
+                Text = frend.name,
                 AutoSize = true,
                 AutoEllipsis = true,
                 Location = new Point(45 / 2 - 10, 45 / 2 - 10),
-                Font = new Font(DefaultFont.FontFamily, 20, FontStyle.Regular),
+                Font = new Font(DefaultFont.FontFamily, 14, FontStyle.Regular),
             };
             var ico = new LogoPan()
             {
@@ -401,7 +414,8 @@ namespace MyMessager
 
         private void CreateChat_Click(object sender, EventArgs e)
         {
-            Task.Run(CreateChat);
+            var pan = contextMenuFrend.SourceControl as Panel;
+            Task.Run(()=>CreateChat(pan.Name));
         }
 
         private void CreateChat(Guid id_chat, string name_frend)
@@ -453,9 +467,9 @@ namespace MyMessager
             }
         }
 
-        private async Task CreateChat()
+        private async Task CreateChat(string frend_name)
         {
-            var frends_tag = frends.Select(f => f.Name.ToString()).Where(t => !t.Equals(null)).ToList();
+            var frends_tag = frends.Select(f => f.Name.ToString()).Where(t => !t.Equals(null) && t == frend_name).ToList();
             var chats_name = chats.Select(c => c.Item3.Text).ToList();
             var name = frends_tag.Except(chats_name);
 
@@ -647,19 +661,23 @@ namespace MyMessager
         private void UpdateFrendTimer_Tick(object sender, EventArgs e)
         {
             if (!log) return;
-            Task.Run(FrendUpd);
+            var ts = Task.Run(FrendUpd);
+            while(!ts.IsCompleted) { Task.Delay(500); }
         }
 
         private async Task FrendUpd()
         {
             var frend_list = await API.GetFrends();
             var frend_id = frend_list.Select(f => f.id.ToString()).ToList();
-            List<Frend> newFrend = [];
-            foreach (var f in frends)
-                if (!frend_id.Contains(f.Tag.ToString()))
+            var local_frend = frends.Select(f => f.Tag.ToString()).ToList();
+            foreach (var f in frend_id)
+                if (!local_frend.Contains(f))
                 {
-                    Frend nf = frend_list.Where(fr => fr.id.ToString().Equals(f.Tag.ToString())).First();
-                    AddFrend(nf);
+                    Frend nf = frend_list.Where(fr => fr.id.ToString().Equals(f)).First();
+                    BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+                    {
+                        AddFrend(nf);
+                    }));
                 }
         }
 
@@ -671,13 +689,13 @@ namespace MyMessager
                 {
                     AddFrend(nf);
                 }));
-            UpdateFrendTimer.Enabled = true;
         }
 
         private void UpdateChatsTimer_Tick(object sender, EventArgs e)
         {
             if (!log) return;
-            Task.Run(UpdateChats);
+            var ts = Task.Run(UpdateChats);
+            while (!ts.IsCompleted) { Task.Delay(500); }
         }
 
         private async Task UpdateChatsStart()
@@ -698,9 +716,9 @@ namespace MyMessager
             var chat_frend = chats.Select(f => f.frend).ToList();
             var chat_ = this.chats.Select(f => f.Item3.Text).ToList();
 
-            foreach (var chat in chat_)
+            foreach (var chat in chat_frend)
             {
-                if (!chat_frend.Contains(chat))
+                if (!chat_.Contains(chat))
                 {
                     var ch = chats.Where(c => c.frend == chat).First();
                     BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
