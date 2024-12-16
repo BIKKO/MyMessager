@@ -53,6 +53,7 @@
             contextMenuMess = new ContextMenuStrip(components);
             UpdateFrendTimer = new System.Windows.Forms.Timer(components);
             UpdateChatsTimer = new System.Windows.Forms.Timer(components);
+            UpdateMessageTimer = new System.Windows.Forms.Timer(components);
             panel1.SuspendLayout();
             SettingsPan.SuspendLayout();
             FrendPan.SuspendLayout();
@@ -289,6 +290,11 @@
             UpdateChatsTimer.Interval = 2000;
             UpdateChatsTimer.Tick += UpdateChatsTimer_Tick;
             // 
+            // UpdateMessageTimer
+            // 
+            UpdateMessageTimer.Interval = 1000;
+            UpdateMessageTimer.Tick += UpdateMessageTimer_Tick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -341,5 +347,6 @@
         private ContextMenuStrip contextMenuMess;
         private System.Windows.Forms.Timer UpdateFrendTimer;
         private System.Windows.Forms.Timer UpdateChatsTimer;
+        private System.Windows.Forms.Timer UpdateMessageTimer;
     }
 }

@@ -18,9 +18,9 @@ namespace MyMessager
         int buf_mes;
         int buf_chat;
         int buf_fre;
-        List<(Panel, Label)> mes = new List<(Panel, Label)>();
-        List<((Guid, string), Panel, Label, List<(Panel, Label)>, int, int)> chats =
-            new List<((Guid, string), Panel, Label, List<(Panel, Label)>, int, int)>();
+        List<(Panel, Label, MessangerAPI.Core.Model.Message)> mes = new List<(Panel, Label, MessangerAPI.Core.Model.Message)>();
+        List<((Guid, string), Panel, Label, List<(Panel, Label, MessangerAPI.Core.Model.Message)>, int, int)> chats =
+            new List<((Guid, string), Panel, Label, List<(Panel, Label, MessangerAPI.Core.Model.Message)>, int, int)>();
         List<Panel> frends = new List<Panel>();
         int MessPanWidth;
         int MessPanHeight;
@@ -31,7 +31,7 @@ namespace MyMessager
         int mes_max_size;
         MessangerAPI.Core.MessangerAPI API;
         Login LoginForm;
-        ((Guid, string), Panel, Label, List<(Panel, Label)>, int, int) obj;
+        ((Guid, string), Panel, Label, List<(Panel, Label, MessangerAPI.Core.Model.Message)>, int, int) obj;
 
         bool mess_update;
         Label update_lable;
@@ -148,11 +148,21 @@ namespace MyMessager
             }
         }
 
-        private void CreateMes(string _mess, MessPosition position)
+        private void CreateMes(MessangerAPI.Core.Model.Message message_)
         {
             string message;
             int mess_width;
-            FormanMess(_mess, out message, out mess_width);
+            FormanMess(message_.mes, out message, out mess_width);
+
+            MessPosition position;
+            if (API.WhoSay(message_))
+            {
+                position = MessPosition.Right;
+            }
+            else
+            {
+                position = MessPosition.Left;
+            }
 
             var u1 = new Label()
             {
@@ -167,7 +177,7 @@ namespace MyMessager
             u1.ContextMenuStrip = contextMenuMess;
             var d = new Label()
             {
-                Text = new string('\n', message.Split("\n").Length - 2) + DateTime.Now.ToShortTimeString(),
+                Text = new string('\n', message.Split("\n").Length - 2) + message_.date.ToShortTimeString(),
                 AutoEllipsis = true,
                 AutoSize = true,
                 BackColor = position == MessPosition.Right ? Color.LightGray : Color.LightSlateGray,
@@ -181,6 +191,7 @@ namespace MyMessager
                 Height = u1.Height,
                 Width = MessagesPan.Width,
                 Visible = true,
+                Tag = message_.id,
             };
             if (position == MessPosition.Right)
             {
@@ -201,7 +212,7 @@ namespace MyMessager
 
             if (mes.Count > 0)
                 mes.ForEach(me => { me.Item1.Location = new Point(0, me.Item1.Location.Y - testpan.Height - butomPad); });
-            mes.Add((testpan, u1));
+            mes.Add((testpan, u1, message_));
         }
 
         private void FormanMess(string _mess, out string message, out int mess_width)
@@ -247,33 +258,36 @@ namespace MyMessager
                 return;
             }
 
-            if (f)
+            Task.Run(CreareMess_);
+        }
+
+        private async Task CreareMess_()
+        {
+            var id_chat = Guid.Parse(obj.Item2.Tag.ToString());
+            await API.CreateMessage(id_chat, textBox1.Text);
+            BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
             {
-                try
+                textBox1.Text = string.Empty;
+                textBox1.Lines = null;
+
+                UpdateScrollBar();
+            }));
+        }
+
+        private async Task GetMessage()
+        {
+            var mess_ = await API.GetMessage(Guid.Parse(obj.Item2.Tag.ToString()));
+            var local_mess = mes.Select(m => m.Item1.Tag.ToString()).ToList();
+            foreach (var m in mess_)
+            {
+                if (!local_mess.Contains(m.id.ToString()))
                 {
-                    CreateMes(textBox1.Text, MessPosition.Right);
-                }
-                catch (ArgumentNullException)
-                {
-                    return;
+                    BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
+                    {
+                        CreateMes(m);
+                    }));
                 }
             }
-            else
-            {
-                try
-                {
-                    CreateMes(textBox1.Text, MessPosition.Left);
-                }
-                catch (ArgumentNullException)
-                {
-                    return;
-                }
-            }
-
-            textBox1.Text = string.Empty;
-            textBox1.Lines = null;
-
-            UpdateScrollBar();
         }
 
         private void UpdateMessade()
@@ -415,7 +429,7 @@ namespace MyMessager
         private void CreateChat_Click(object sender, EventArgs e)
         {
             var pan = contextMenuFrend.SourceControl as Panel;
-            Task.Run(()=>CreateChat(pan.Name));
+            Task.Run(() => CreateChat(pan.Name));
         }
 
         private void CreateChat(Guid id_chat, string name_frend)
@@ -481,7 +495,7 @@ namespace MyMessager
             {
                 CreateChat(id_chat, name.ToList()[0]);
             }));
-            
+
         }
 
         private void DeleteFrend_Click(object sender, EventArgs e)
@@ -591,6 +605,7 @@ namespace MyMessager
 
         private void SelectChat_Click(object sender, EventArgs e)
         {
+            UpdateMessageTimer.Enabled = false;
             obj.Item4 = mes;
             obj.Item5 = buf_mes;
             obj.Item6 = start_mes;
@@ -637,6 +652,7 @@ namespace MyMessager
                 MessagesPan.Controls.Add(item.Item1);
             }
 
+            UpdateMessageTimer.Enabled = true;
             UpdateScrollBar();
         }
 
@@ -662,7 +678,7 @@ namespace MyMessager
         {
             if (!log) return;
             var ts = Task.Run(FrendUpd);
-            while(!ts.IsCompleted) { Task.Delay(500); }
+            while (!ts.IsCompleted) { Task.Delay(500); }
         }
 
         private async Task FrendUpd()
@@ -727,6 +743,13 @@ namespace MyMessager
                     }));
                 }
             }
+        }
+
+        private void UpdateMessageTimer_Tick(object sender, EventArgs e)
+        {
+            if (!log) return;
+            var ts = Task.Run(GetMessage);
+            while (!ts.IsCompleted) { Task.Delay(500); }
         }
     }
 }
