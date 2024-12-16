@@ -254,7 +254,8 @@ namespace MyMessager
 
             if (mess_update)
             {
-                UpdateMessade();
+                
+                Task.Run(UpdateMess_);
                 return;
             }
 
@@ -276,10 +277,15 @@ namespace MyMessager
 
         private async Task GetMessage()
         {
+            string msg = string.Empty;
+            int mess_width;
+
             var mess_ = await API.GetMessage(Guid.Parse(obj.Item2.Tag.ToString()));
             var local_mess = mes.Select(m => m.Item1.Tag.ToString()).ToList();
+            var local_mess_labl = mes.Select(m => m.Item2.Text).ToList();
             foreach (var m in mess_)
             {
+                FormanMess(m.mes, out msg, out mess_width);
                 if (!local_mess.Contains(m.id.ToString()))
                 {
                     BeginInvoke(new System.Windows.Forms.MethodInvoker(() =>
@@ -287,10 +293,11 @@ namespace MyMessager
                         CreateMes(m);
                     }));
                 }
+                
             }
         }
 
-        private void UpdateMessade()
+        private MessangerAPI.Core.Model.Message UpdateMessade()
         {
             var mess = obj.Item4.Where(m => m.Item2.Equals(update_lable)).First();
             string msg = string.Empty;
@@ -299,6 +306,7 @@ namespace MyMessager
             FormanMess(textBox1.Text, out msg, out mess_width);
 
             mess.Item2.Text = msg;
+            mess.Item3.mes = msg;
             var c = mess.Item1.Controls;
             foreach (Control c2 in c)
             {
@@ -325,6 +333,17 @@ namespace MyMessager
 
             textBox1.Text = string.Empty;
             mess_update = false;
+
+            return mess.Item3;
+        }
+
+        private void UpdateMess_()
+        {
+            BeginInvoke(new System.Windows.Forms.MethodInvoker(async () =>
+            {
+                var mess = UpdateMessade();
+                await API.UpdateMessage(mess.id, mess.mes);
+            }));   
         }
 
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
