@@ -54,6 +54,7 @@
             UpdateFrendTimer = new System.Windows.Forms.Timer(components);
             UpdateChatsTimer = new System.Windows.Forms.Timer(components);
             UpdateMessageTimer = new System.Windows.Forms.Timer(components);
+            AdminMenuStrip = new ContextMenuStrip(components);
             panel1.SuspendLayout();
             SettingsPan.SuspendLayout();
             FrendPan.SuspendLayout();
@@ -74,7 +75,7 @@
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(308, 450);
+            panel1.Size = new Size(309, 451);
             panel1.TabIndex = 0;
             // 
             // ChatsPan
@@ -82,17 +83,17 @@
             ChatsPan.AutoScrollMargin = new Size(0, 1);
             ChatsPan.BackColor = Color.Gainsboro;
             ChatsPan.Dock = DockStyle.Fill;
-            ChatsPan.Location = new Point(76, 0);
+            ChatsPan.Location = new Point(75, 0);
             ChatsPan.Name = "ChatsPan";
-            ChatsPan.Size = new Size(219, 406);
+            ChatsPan.Size = new Size(221, 407);
             ChatsPan.TabIndex = 1;
             // 
             // ScrollBarChat
             // 
             ScrollBarChat.Dock = DockStyle.Right;
-            ScrollBarChat.Location = new Point(295, 0);
+            ScrollBarChat.Location = new Point(296, 0);
             ScrollBarChat.Name = "ScrollBarChat";
-            ScrollBarChat.Size = new Size(13, 406);
+            ScrollBarChat.Size = new Size(13, 407);
             ScrollBarChat.TabIndex = 3;
             ScrollBarChat.Visible = false;
             ScrollBarChat.Scroll += ScrollBarChat_Scroll;
@@ -105,7 +106,7 @@
             SettingsPan.Dock = DockStyle.Left;
             SettingsPan.Location = new Point(0, 0);
             SettingsPan.Name = "SettingsPan";
-            SettingsPan.Size = new Size(76, 406);
+            SettingsPan.Size = new Size(75, 407);
             SettingsPan.TabIndex = 2;
             // 
             // FrendPan
@@ -114,15 +115,15 @@
             FrendPan.Dock = DockStyle.Fill;
             FrendPan.Location = new Point(0, 71);
             FrendPan.Name = "FrendPan";
-            FrendPan.Size = new Size(76, 335);
+            FrendPan.Size = new Size(75, 336);
             FrendPan.TabIndex = 1;
             // 
             // ScrollBarFrend
             // 
             ScrollBarFrend.Dock = DockStyle.Right;
-            ScrollBarFrend.Location = new Point(59, 0);
+            ScrollBarFrend.Location = new Point(58, 0);
             ScrollBarFrend.Name = "ScrollBarFrend";
-            ScrollBarFrend.Size = new Size(17, 335);
+            ScrollBarFrend.Size = new Size(17, 336);
             ScrollBarFrend.TabIndex = 0;
             ScrollBarFrend.Scroll += ScrollBarFrend_Scroll;
             // 
@@ -133,7 +134,7 @@
             panel6.Dock = DockStyle.Top;
             panel6.Location = new Point(0, 0);
             panel6.Name = "panel6";
-            panel6.Size = new Size(76, 71);
+            panel6.Size = new Size(75, 71);
             panel6.TabIndex = 0;
             // 
             // label1
@@ -143,18 +144,17 @@
             label1.Font = new Font("Segoe UI", 20F);
             label1.Location = new Point(1, 12);
             label1.Name = "label1";
-            label1.Size = new Size(75, 46);
+            label1.Size = new Size(0, 46);
             label1.TabIndex = 0;
-            label1.Text = "You";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // FrendAddbutton
             // 
             FrendAddbutton.BackColor = Color.DarkGray;
             FrendAddbutton.Dock = DockStyle.Bottom;
-            FrendAddbutton.Location = new Point(0, 406);
+            FrendAddbutton.Location = new Point(0, 407);
             FrendAddbutton.Name = "FrendAddbutton";
-            FrendAddbutton.Size = new Size(308, 44);
+            FrendAddbutton.Size = new Size(309, 44);
             FrendAddbutton.TabIndex = 0;
             FrendAddbutton.Text = "Найти друга";
             FrendAddbutton.UseVisualStyleBackColor = false;
@@ -167,9 +167,9 @@
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(ContextPan);
             panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(308, 0);
+            panel2.Location = new Point(309, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(492, 450);
+            panel2.Size = new Size(491, 451);
             panel2.TabIndex = 1;
             // 
             // MessagesPan
@@ -179,16 +179,16 @@
             MessagesPan.Dock = DockStyle.Fill;
             MessagesPan.Location = new Point(0, 51);
             MessagesPan.Name = "MessagesPan";
-            MessagesPan.Size = new Size(472, 355);
+            MessagesPan.Size = new Size(471, 356);
             MessagesPan.TabIndex = 1;
             MessagesPan.SizeChanged += MessagesPan_SizeChanged;
             // 
             // ScrollBarMess
             // 
             ScrollBarMess.Dock = DockStyle.Right;
-            ScrollBarMess.Location = new Point(472, 51);
+            ScrollBarMess.Location = new Point(471, 51);
             ScrollBarMess.Name = "ScrollBarMess";
-            ScrollBarMess.Size = new Size(20, 355);
+            ScrollBarMess.Size = new Size(20, 356);
             ScrollBarMess.TabIndex = 1;
             ScrollBarMess.Scroll += vScrollBar1_Scroll;
             // 
@@ -197,9 +197,9 @@
             panel3.Controls.Add(panel5);
             panel3.Controls.Add(panel4);
             panel3.Dock = DockStyle.Bottom;
-            panel3.Location = new Point(0, 406);
+            panel3.Location = new Point(0, 407);
             panel3.Name = "panel3";
-            panel3.Size = new Size(492, 44);
+            panel3.Size = new Size(491, 44);
             panel3.TabIndex = 0;
             // 
             // panel5
@@ -208,7 +208,7 @@
             panel5.Dock = DockStyle.Fill;
             panel5.Location = new Point(0, 0);
             panel5.Name = "panel5";
-            panel5.Size = new Size(360, 44);
+            panel5.Size = new Size(358, 44);
             panel5.TabIndex = 2;
             // 
             // textBox1
@@ -217,7 +217,7 @@
             textBox1.Location = new Point(0, 0);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(360, 44);
+            textBox1.Size = new Size(358, 44);
             textBox1.TabIndex = 0;
             textBox1.KeyDown += textBox1_KeyDown;
             // 
@@ -225,9 +225,9 @@
             // 
             panel4.Controls.Add(AddMessbutton);
             panel4.Dock = DockStyle.Right;
-            panel4.Location = new Point(360, 0);
+            panel4.Location = new Point(358, 0);
             panel4.Name = "panel4";
-            panel4.Size = new Size(132, 44);
+            panel4.Size = new Size(133, 44);
             panel4.TabIndex = 1;
             // 
             // AddMessbutton
@@ -236,7 +236,7 @@
             AddMessbutton.Dock = DockStyle.Fill;
             AddMessbutton.Location = new Point(0, 0);
             AddMessbutton.Name = "AddMessbutton";
-            AddMessbutton.Size = new Size(132, 44);
+            AddMessbutton.Size = new Size(133, 44);
             AddMessbutton.TabIndex = 0;
             AddMessbutton.Text = "Отправить";
             AddMessbutton.UseVisualStyleBackColor = false;
@@ -249,7 +249,7 @@
             ContextPan.Dock = DockStyle.Top;
             ContextPan.Location = new Point(0, 0);
             ContextPan.Name = "ContextPan";
-            ContextPan.Size = new Size(492, 51);
+            ContextPan.Size = new Size(491, 51);
             ContextPan.TabIndex = 2;
             // 
             // ContentLable
@@ -295,12 +295,18 @@
             UpdateMessageTimer.Interval = 1000;
             UpdateMessageTimer.Tick += UpdateMessageTimer_Tick;
             // 
+            // AdminMenuStrip
+            // 
+            AdminMenuStrip.ImageScalingSize = new Size(20, 20);
+            AdminMenuStrip.Name = "AdminMenuStrip";
+            AdminMenuStrip.Size = new Size(61, 4);
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 451);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "Form1";
@@ -348,5 +354,6 @@
         private System.Windows.Forms.Timer UpdateFrendTimer;
         private System.Windows.Forms.Timer UpdateChatsTimer;
         private System.Windows.Forms.Timer UpdateMessageTimer;
+        private ContextMenuStrip AdminMenuStrip;
     }
 }

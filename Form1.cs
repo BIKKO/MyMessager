@@ -76,6 +76,10 @@ namespace MyMessager
             contextMenuMess.Items.Add(UpdateMess);
             UpdateMess.Click += UpdateMess_Click;
 
+            ToolStripMenuItem LogOut = new ToolStripMenuItem("Выход");
+            AdminMenuStrip.Items.Add(LogOut);
+            LogOut.Click += LogOut_Click;
+
 #if !DEBUG
             log = false;
             var appConfig = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
@@ -107,6 +111,27 @@ namespace MyMessager
                     UpdateFrendTimer.Enabled = true;
                     UpdateChatsTimer.Enabled = true;
                     log = true;
+                    if (API.GetDostup() == 5)
+                    {
+                        ToolStripMenuItem Admin = new ToolStripMenuItem("Получить таблицы");
+                        AdminMenuStrip.Items.Add(Admin);
+                        Admin.Click += GetDB;
+                        ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
+                        AdminPan.Click += AdPan;
+                        AdminMenuStrip.Items.Add(AdminPan);
+                        label1.ContextMenuStrip = AdminMenuStrip;
+                    }
+                    else if (API.GetDostup() >= 3)
+                    {
+                        ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
+                        AdminPan.Click += AdPan;
+                        AdminMenuStrip.Items.Add(AdminPan);
+                        label1.ContextMenuStrip = AdminMenuStrip;
+                    }
+                    else
+                    {
+                        label1.ContextMenuStrip = AdminMenuStrip;
+                    }
                 }));
             }
             catch
@@ -114,6 +139,34 @@ namespace MyMessager
                 MessageBox.Show("Неудалось подключиться");
                 BeginInvoke(new System.Windows.Forms.MethodInvoker(Close));
             }
+        }
+
+        private void GetDB(object sender, EventArgs e)
+        {
+            var ofd = new FolderBrowserDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                API.ExportFile(ofd.SelectedPath);
+            }
+        }
+
+        private void AdPan(object sender, EventArgs e)
+        {
+            var ad = new AdminPanel(API);
+            ad.Show();
+        }
+
+        private void LogOut_Click(object sender, EventArgs e)
+        {
+            FrendPan.Controls.Clear();
+            panel2.Visible = false;
+            ChatsPan.Controls.Clear();
+            log = false;
+            label1.Text = string.Empty;
+            API.Logout();
+            LoginForm = new Login(API);
+            LoginForm.Show();
+            MessageRefresh.Enabled = true;
         }
 
         private void UpdateScrollBar()
@@ -172,9 +225,9 @@ namespace MyMessager
                 AutoEllipsis = true,
                 AutoSize = true,
                 BackColor = position == MessPosition.Right ? Color.LightGray : Color.LightSlateGray,
+                Tag = message_.id,
             };
             u1.Height *= message.Split("\n").Length;
-            u1.ContextMenuStrip = contextMenuMess;
             var d = new Label()
             {
                 Text = new string('\n', message.Split("\n").Length - 2) + message_.date.ToShortTimeString(),
@@ -195,6 +248,7 @@ namespace MyMessager
             };
             if (position == MessPosition.Right)
             {
+                u1.ContextMenuStrip = contextMenuMess;
                 testpan.Controls.Add(u1);
                 testpan.Controls.Add(d);
             }
@@ -293,7 +347,7 @@ namespace MyMessager
                         CreateMes(m);
                     }));
                 }
-                
+
             }
         }
 
@@ -383,6 +437,27 @@ namespace MyMessager
                     UpdateFrendTimer.Enabled = true;
                     UpdateChatsTimer.Enabled = true;
                     log = true;
+                    if (API.GetDostup() == 5)
+                    {
+                        ToolStripMenuItem Admin = new ToolStripMenuItem("Получить таблицы");
+                        AdminMenuStrip.Items.Add(Admin);
+                        Admin.Click += GetDB;
+                        ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
+                        AdminPan.Click += AdPan;
+                        AdminMenuStrip.Items.Add(AdminPan);
+                        label1.ContextMenuStrip = AdminMenuStrip;
+                    }
+                    else if (API.GetDostup() >= 3)
+                    {
+                        ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
+                        AdminPan.Click += AdPan;
+                        AdminMenuStrip.Items.Add(AdminPan);
+                        label1.ContextMenuStrip = AdminMenuStrip;
+                    }
+                    else
+                    {
+                        label1.ContextMenuStrip = AdminMenuStrip;
+                    }
                 }));
 #endif
         }
@@ -545,6 +620,8 @@ namespace MyMessager
 
         private void UpdateMess_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("Не работает по техническим присчинам");
+            return;
             var upd_mes = contextMenuMess.SourceControl as Label;
             if (upd_mes == null) return;
             if (upd_mes.Tag == "date")
