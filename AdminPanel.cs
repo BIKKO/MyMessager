@@ -50,6 +50,11 @@ namespace MyMessager
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
+            if (comboBox1.SelectedItem.ToString() == "admin")
+            {
+                MessageBox.Show("Нельзя изменить");
+                return;
+            }
             Task.Run(Save);
         }
 
@@ -57,11 +62,6 @@ namespace MyMessager
         {
             BeginInvoke(new MethodInvoker(async () =>
             {
-                if (comboBox1.SelectedItem.ToString() == "admin")
-                {
-                    MessageBox.Show("Нельзя изменить");
-                    return;
-                }
                 var id = users.Where(u => u.login == comboBox1.SelectedItem.ToString())
                     .Select(u => u.id).First();
                 await admin.SetDost(id, (int)numericUpDown1.Value);
@@ -75,6 +75,20 @@ namespace MyMessager
                 MessageBox.Show("Нельзя удалить");
                 return;
             }
+            Task.Run(Ban);
+        }
+
+        private async Task Ban()
+        {
+            BeginInvoke(new MethodInvoker(async () =>
+            {
+                var id = users.Where(u => u.login == comboBox1.SelectedItem.ToString())
+                    .Select(u => u.id).First();
+                await admin.Ban(id);
+                users = await admin.Admin();
+                var user_name = users.Select(u => u.login).ToArray();
+                comboBox1.DataSource = user_name;
+            }));
         }
     }
 }

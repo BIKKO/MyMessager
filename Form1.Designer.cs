@@ -74,8 +74,9 @@
             panel1.Controls.Add(FrendAddbutton);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(309, 451);
+            panel1.Size = new Size(270, 338);
             panel1.TabIndex = 0;
             // 
             // ChatsPan
@@ -83,17 +84,18 @@
             ChatsPan.AutoScrollMargin = new Size(0, 1);
             ChatsPan.BackColor = Color.Gainsboro;
             ChatsPan.Dock = DockStyle.Fill;
-            ChatsPan.Location = new Point(75, 0);
+            ChatsPan.Location = new Point(66, 0);
+            ChatsPan.Margin = new Padding(3, 2, 3, 2);
             ChatsPan.Name = "ChatsPan";
-            ChatsPan.Size = new Size(221, 407);
+            ChatsPan.Size = new Size(191, 305);
             ChatsPan.TabIndex = 1;
             // 
             // ScrollBarChat
             // 
             ScrollBarChat.Dock = DockStyle.Right;
-            ScrollBarChat.Location = new Point(296, 0);
+            ScrollBarChat.Location = new Point(257, 0);
             ScrollBarChat.Name = "ScrollBarChat";
-            ScrollBarChat.Size = new Size(13, 407);
+            ScrollBarChat.Size = new Size(13, 305);
             ScrollBarChat.TabIndex = 3;
             ScrollBarChat.Visible = false;
             ScrollBarChat.Scroll += ScrollBarChat_Scroll;
@@ -105,25 +107,27 @@
             SettingsPan.Controls.Add(panel6);
             SettingsPan.Dock = DockStyle.Left;
             SettingsPan.Location = new Point(0, 0);
+            SettingsPan.Margin = new Padding(3, 2, 3, 2);
             SettingsPan.Name = "SettingsPan";
-            SettingsPan.Size = new Size(75, 407);
+            SettingsPan.Size = new Size(66, 305);
             SettingsPan.TabIndex = 2;
             // 
             // FrendPan
             // 
             FrendPan.Controls.Add(ScrollBarFrend);
             FrendPan.Dock = DockStyle.Fill;
-            FrendPan.Location = new Point(0, 71);
+            FrendPan.Location = new Point(0, 53);
+            FrendPan.Margin = new Padding(3, 2, 3, 2);
             FrendPan.Name = "FrendPan";
-            FrendPan.Size = new Size(75, 336);
+            FrendPan.Size = new Size(66, 252);
             FrendPan.TabIndex = 1;
             // 
             // ScrollBarFrend
             // 
             ScrollBarFrend.Dock = DockStyle.Right;
-            ScrollBarFrend.Location = new Point(58, 0);
+            ScrollBarFrend.Location = new Point(49, 0);
             ScrollBarFrend.Name = "ScrollBarFrend";
-            ScrollBarFrend.Size = new Size(17, 336);
+            ScrollBarFrend.Size = new Size(17, 252);
             ScrollBarFrend.TabIndex = 0;
             ScrollBarFrend.Scroll += ScrollBarFrend_Scroll;
             // 
@@ -133,8 +137,9 @@
             panel6.Controls.Add(label1);
             panel6.Dock = DockStyle.Top;
             panel6.Location = new Point(0, 0);
+            panel6.Margin = new Padding(3, 2, 3, 2);
             panel6.Name = "panel6";
-            panel6.Size = new Size(75, 71);
+            panel6.Size = new Size(66, 53);
             panel6.TabIndex = 0;
             // 
             // label1
@@ -142,9 +147,9 @@
             label1.AutoSize = true;
             label1.BackColor = Color.DarkGray;
             label1.Font = new Font("Segoe UI", 20F);
-            label1.Location = new Point(1, 12);
+            label1.Location = new Point(1, 9);
             label1.Name = "label1";
-            label1.Size = new Size(0, 46);
+            label1.Size = new Size(0, 37);
             label1.TabIndex = 0;
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -152,9 +157,10 @@
             // 
             FrendAddbutton.BackColor = Color.DarkGray;
             FrendAddbutton.Dock = DockStyle.Bottom;
-            FrendAddbutton.Location = new Point(0, 407);
+            FrendAddbutton.Location = new Point(0, 305);
+            FrendAddbutton.Margin = new Padding(3, 2, 3, 2);
             FrendAddbutton.Name = "FrendAddbutton";
-            FrendAddbutton.Size = new Size(309, 44);
+            FrendAddbutton.Size = new Size(270, 33);
             FrendAddbutton.TabIndex = 0;
             FrendAddbutton.Text = "Найти друга";
             FrendAddbutton.UseVisualStyleBackColor = false;
@@ -167,9 +173,10 @@
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(ContextPan);
             panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(309, 0);
+            panel2.Location = new Point(270, 0);
+            panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(491, 451);
+            panel2.Size = new Size(430, 338);
             panel2.TabIndex = 1;
             // 
             // MessagesPan
@@ -177,18 +184,19 @@
             MessagesPan.AutoScrollMargin = new Size(0, 20);
             MessagesPan.BackColor = Color.DimGray;
             MessagesPan.Dock = DockStyle.Fill;
-            MessagesPan.Location = new Point(0, 51);
+            MessagesPan.Location = new Point(0, 38);
+            MessagesPan.Margin = new Padding(3, 2, 3, 2);
             MessagesPan.Name = "MessagesPan";
-            MessagesPan.Size = new Size(471, 356);
+            MessagesPan.Size = new Size(410, 267);
             MessagesPan.TabIndex = 1;
             MessagesPan.SizeChanged += MessagesPan_SizeChanged;
             // 
             // ScrollBarMess
             // 
             ScrollBarMess.Dock = DockStyle.Right;
-            ScrollBarMess.Location = new Point(471, 51);
+            ScrollBarMess.Location = new Point(410, 38);
             ScrollBarMess.Name = "ScrollBarMess";
-            ScrollBarMess.Size = new Size(20, 356);
+            ScrollBarMess.Size = new Size(20, 267);
             ScrollBarMess.TabIndex = 1;
             ScrollBarMess.Scroll += vScrollBar1_Scroll;
             // 
@@ -197,9 +205,10 @@
             panel3.Controls.Add(panel5);
             panel3.Controls.Add(panel4);
             panel3.Dock = DockStyle.Bottom;
-            panel3.Location = new Point(0, 407);
+            panel3.Location = new Point(0, 305);
+            panel3.Margin = new Padding(3, 2, 3, 2);
             panel3.Name = "panel3";
-            panel3.Size = new Size(491, 44);
+            panel3.Size = new Size(430, 33);
             panel3.TabIndex = 0;
             // 
             // panel5
@@ -207,17 +216,19 @@
             panel5.Controls.Add(textBox1);
             panel5.Dock = DockStyle.Fill;
             panel5.Location = new Point(0, 0);
+            panel5.Margin = new Padding(3, 2, 3, 2);
             panel5.Name = "panel5";
-            panel5.Size = new Size(358, 44);
+            panel5.Size = new Size(314, 33);
             panel5.TabIndex = 2;
             // 
             // textBox1
             // 
             textBox1.Dock = DockStyle.Fill;
             textBox1.Location = new Point(0, 0);
+            textBox1.Margin = new Padding(3, 2, 3, 2);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(358, 44);
+            textBox1.Size = new Size(314, 33);
             textBox1.TabIndex = 0;
             textBox1.KeyDown += textBox1_KeyDown;
             // 
@@ -225,9 +236,10 @@
             // 
             panel4.Controls.Add(AddMessbutton);
             panel4.Dock = DockStyle.Right;
-            panel4.Location = new Point(358, 0);
+            panel4.Location = new Point(314, 0);
+            panel4.Margin = new Padding(3, 2, 3, 2);
             panel4.Name = "panel4";
-            panel4.Size = new Size(133, 44);
+            panel4.Size = new Size(116, 33);
             panel4.TabIndex = 1;
             // 
             // AddMessbutton
@@ -235,8 +247,9 @@
             AddMessbutton.BackColor = SystemColors.ActiveCaption;
             AddMessbutton.Dock = DockStyle.Fill;
             AddMessbutton.Location = new Point(0, 0);
+            AddMessbutton.Margin = new Padding(3, 2, 3, 2);
             AddMessbutton.Name = "AddMessbutton";
-            AddMessbutton.Size = new Size(133, 44);
+            AddMessbutton.Size = new Size(116, 33);
             AddMessbutton.TabIndex = 0;
             AddMessbutton.Text = "Отправить";
             AddMessbutton.UseVisualStyleBackColor = false;
@@ -248,8 +261,9 @@
             ContextPan.Controls.Add(ContentLable);
             ContextPan.Dock = DockStyle.Top;
             ContextPan.Location = new Point(0, 0);
+            ContextPan.Margin = new Padding(3, 2, 3, 2);
             ContextPan.Name = "ContextPan";
-            ContextPan.Size = new Size(491, 51);
+            ContextPan.Size = new Size(430, 38);
             ContextPan.TabIndex = 2;
             // 
             // ContentLable
@@ -259,7 +273,7 @@
             ContentLable.Font = new Font("Segoe UI", 14F);
             ContentLable.Location = new Point(0, 0);
             ContentLable.Name = "ContentLable";
-            ContentLable.Size = new Size(78, 32);
+            ContentLable.Size = new Size(63, 25);
             ContentLable.TabIndex = 0;
             ContentLable.Text = "label1";
             // 
@@ -303,12 +317,13 @@
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
-            ClientSize = new Size(800, 451);
+            ClientSize = new Size(700, 338);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             Text = "Messanger";
             FormClosing += Form1_FormClosing;

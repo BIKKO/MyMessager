@@ -100,7 +100,7 @@ namespace MyMessager
         {
             try
             {
-                await API.Login("ts1", "123");
+                await API.Login("admin", "admin");
                 MessageBox.Show("Вход под ts1 успешен");
                 BeginInvoke(new System.Windows.Forms.MethodInvoker(async () =>
                 {
@@ -119,19 +119,14 @@ namespace MyMessager
                         ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
                         AdminPan.Click += AdPan;
                         AdminMenuStrip.Items.Add(AdminPan);
-                        label1.ContextMenuStrip = AdminMenuStrip;
                     }
                     else if (API.GetDostup() >= 3)
                     {
                         ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
                         AdminPan.Click += AdPan;
                         AdminMenuStrip.Items.Add(AdminPan);
-                        label1.ContextMenuStrip = AdminMenuStrip;
                     }
-                    else
-                    {
-                        label1.ContextMenuStrip = AdminMenuStrip;
-                    }
+                    label1.ContextMenuStrip = AdminMenuStrip;
                 }));
             }
             catch
@@ -445,19 +440,14 @@ namespace MyMessager
                         ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
                         AdminPan.Click += AdPan;
                         AdminMenuStrip.Items.Add(AdminPan);
-                        label1.ContextMenuStrip = AdminMenuStrip;
                     }
                     else if (API.GetDostup() >= 3)
                     {
                         ToolStripMenuItem AdminPan = new ToolStripMenuItem("Панель управления");
                         AdminPan.Click += AdPan;
                         AdminMenuStrip.Items.Add(AdminPan);
-                        label1.ContextMenuStrip = AdminMenuStrip;
                     }
-                    else
-                    {
-                        label1.ContextMenuStrip = AdminMenuStrip;
-                    }
+                    label1.ContextMenuStrip = AdminMenuStrip;
                 }));
 #endif
         }
@@ -490,7 +480,7 @@ namespace MyMessager
                 Width = FrendPan.Width,
                 BackColor = Color.SlateGray,
                 BorderStyle = BorderStyle.FixedSingle,
-                Tag = frend.id,
+                Tag = frend.id.ToString(),
             };
             start_fre++;
             testpan.Controls.Add(ico);
@@ -595,10 +585,10 @@ namespace MyMessager
         private void DeleteFrend_Click(object sender, EventArgs e)
         {
             var t = contextMenuFrend.SourceControl as Panel;
-            var pan = chats.Where(c => c.Item3.Text == t.Tag.ToString()).Select(s => s.Item2).First();
+            var pan = chats.Where(c => c.Item3.Text == t.Name).Select(s => s.Item2).First();
 
             ChatsPan.Controls.Remove(pan);
-            chats.Remove(chats.Where(c => c.Item3.Text == t.Tag.ToString()).First());
+            chats.Remove(chats.Where(c => c.Item3.Text == t.Name).First());
             FrendPan.Controls.Remove(t);
             frends.Remove(t);
             mes.Clear();
@@ -616,6 +606,8 @@ namespace MyMessager
             {
                 frend.Location = new Point(0, frend.Location.Y - t.Height);
             });
+
+            API.DeleteFrends(Guid.Parse(t.Tag.ToString()));
         }
 
         private void UpdateMess_Click(object sender, EventArgs e)
