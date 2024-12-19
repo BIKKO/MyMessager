@@ -253,7 +253,7 @@
             AddMessbutton.TabIndex = 0;
             AddMessbutton.Text = "Отправить";
             AddMessbutton.UseVisualStyleBackColor = false;
-            AddMessbutton.Click += button2_Click;
+            AddMessbutton.Click += EntryMessage_Click;
             // 
             // ContextPan
             // 
@@ -280,7 +280,7 @@
             // MessageRefresh
             // 
             MessageRefresh.Enabled = true;
-            MessageRefresh.Tick += MessageRefreh_Tick;
+            MessageRefresh.Tick += LoginPanStart_Tick;
             // 
             // contextMenuFrend
             // 
